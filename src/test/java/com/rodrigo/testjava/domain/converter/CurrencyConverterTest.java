@@ -9,7 +9,7 @@ import java.util.Currency;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class CurrencyConverterTest {
+class CurrencyConverterTest {
 
    private CurrencyConverter currencyConverter;
 

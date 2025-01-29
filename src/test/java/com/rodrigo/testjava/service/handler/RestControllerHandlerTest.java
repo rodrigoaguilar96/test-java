@@ -14,7 +14,8 @@ import com.rodrigo.testjava.domain.enums.PriceErrors;
 import com.rodrigo.testjava.domain.exceptions.PriceException;
 
 @ExtendWith(MockitoExtension.class)
-public class RestControllerHandlerTest {
+class RestControllerHandlerTest {
+
    private RestControllerHandler restControllerHandler;
 
    @BeforeEach

@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-public class BrandTest {
+class BrandTest {
+
    @Test
    void shouldCreateBrandWithSetters() {
       Brand brand = new Brand();

@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PriceControllerTest {
+class PriceControllerTest {
 
    @Autowired
    private MockMvc mockMvc;

@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-public class ProductTest {
+class ProductTest {
+
    @Test
    void shouldCreateProductWithSetters() {
       Product product = new Product();
