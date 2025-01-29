@@ -10,7 +10,7 @@ import java.util.Currency;
 
 import org.junit.jupiter.api.Test;
 
-public class PricesEntityTest {
+class PricesEntityTest {
 
    @Test
    void shouldCreatePricesEntityWithSetters() {

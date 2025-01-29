@@ -20,21 +20,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.rodrigo.testjava.application.service.impl.PriceServiceImpl;
 import com.rodrigo.testjava.domain.dto.PriceDto;
 import com.rodrigo.testjava.domain.dto.request.PriceRequestDto;
+import com.rodrigo.testjava.domain.enums.PriceErrors;
+import com.rodrigo.testjava.domain.exceptions.PriceException;
 import com.rodrigo.testjava.domain.model.Brand;
 import com.rodrigo.testjava.domain.model.Prices;
 import com.rodrigo.testjava.domain.model.Product;
-import com.rodrigo.testjava.domain.enums.PriceErrors;
-import com.rodrigo.testjava.domain.exceptions.PriceException;
 import com.rodrigo.testjava.infrastructure.output.adapter.BrandPersistenceAdapter;
 import com.rodrigo.testjava.infrastructure.output.adapter.PricesPersistenceAdapter;
-import com.rodrigo.testjava.infrastructure.output.entity.BrandEntity;
-import com.rodrigo.testjava.infrastructure.output.entity.PricesEntity;
-import com.rodrigo.testjava.infrastructure.output.entity.ProductEntity;
-import com.rodrigo.testjava.infrastructure.output.repository.BrandRepository;
-import com.rodrigo.testjava.infrastructure.output.repository.PricesRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class PriceServiceImplTest {
+class PriceServiceImplTest {
 
    @Mock
    private PricesPersistenceAdapter pricesPersistenceAdapter;
@@ -46,7 +41,9 @@ public class PriceServiceImplTest {
    private PriceServiceImpl priceService;
 
    private PriceRequestDto priceRequestDto;
+
    private Brand brand;
+
    private Prices prices;
 
    @BeforeEach
@@ -70,12 +67,12 @@ public class PriceServiceImplTest {
 
    @Test
    void findPricesByProduct_ShouldReturnPriceDto_WhenPriceExists() {
-      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName()))
-             .thenReturn(Optional.of(brand));
+      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName())).thenReturn(Optional.of(brand));
 
-      Mockito.when(pricesPersistenceAdapter.findPricesByProductByBrandAndRequestDate(
-                   priceRequestDto.getProductId(), brand.getBrandId(), priceRequestDto.getDateTime()))
-             .thenReturn(Optional.of(prices));
+      Mockito
+            .when(pricesPersistenceAdapter.findPricesByProductByBrandAndRequestDate(priceRequestDto.getProductId(), brand.getBrandId(),
+                  priceRequestDto.getDateTime()))
+            .thenReturn(Optional.of(prices));
 
       PriceDto result = priceService.findPricesByProduct(priceRequestDto);
 
@@ -86,8 +83,7 @@ public class PriceServiceImplTest {
 
    @Test
    void findPricesByProduct_ShouldThrowPriceException_WhenBrandNotFound() {
-      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName()))
-             .thenReturn(Optional.empty());
+      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName())).thenReturn(Optional.empty());
 
       PriceException exception = assertThrows(PriceException.class, () -> priceService.findPricesByProduct(priceRequestDto));
 
@@ -97,12 +93,12 @@ public class PriceServiceImplTest {
 
    @Test
    void findPricesByProduct_ShouldThrowPriceException_WhenPriceNotAvailable() {
-      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName()))
-             .thenReturn(Optional.of(brand));
+      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName())).thenReturn(Optional.of(brand));
 
-      Mockito.when(pricesPersistenceAdapter.findPricesByProductByBrandAndRequestDate(
-                   priceRequestDto.getProductId(), brand.getBrandId(), priceRequestDto.getDateTime()))
-             .thenReturn(Optional.empty());
+      Mockito
+            .when(pricesPersistenceAdapter.findPricesByProductByBrandAndRequestDate(priceRequestDto.getProductId(), brand.getBrandId(),
+                  priceRequestDto.getDateTime()))
+            .thenReturn(Optional.empty());
 
       PriceException exception = assertThrows(PriceException.class, () -> priceService.findPricesByProduct(priceRequestDto));
 
