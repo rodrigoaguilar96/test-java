@@ -1,4 +1,4 @@
-package com.rodrigo.testjava.infra.controller;
+package com.rodrigo.testjava.infrastructure.input.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

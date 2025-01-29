@@ -17,72 +17,77 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.rodrigo.testjava.application.service.impl.PriceServiceImpl;
 import com.rodrigo.testjava.domain.dto.PriceDto;
 import com.rodrigo.testjava.domain.dto.request.PriceRequestDto;
-import com.rodrigo.testjava.domain.entity.BrandEntity;
-import com.rodrigo.testjava.domain.entity.PricesEntity;
-import com.rodrigo.testjava.domain.entity.ProductEntity;
+import com.rodrigo.testjava.domain.model.Brand;
+import com.rodrigo.testjava.domain.model.Prices;
+import com.rodrigo.testjava.domain.model.Product;
 import com.rodrigo.testjava.domain.enums.PriceErrors;
 import com.rodrigo.testjava.domain.exceptions.PriceException;
-import com.rodrigo.testjava.domain.repository.BrandRepository;
-import com.rodrigo.testjava.domain.repository.PricesRepository;
+import com.rodrigo.testjava.infrastructure.output.adapter.BrandPersistenceAdapter;
+import com.rodrigo.testjava.infrastructure.output.adapter.PricesPersistenceAdapter;
+import com.rodrigo.testjava.infrastructure.output.entity.BrandEntity;
+import com.rodrigo.testjava.infrastructure.output.entity.PricesEntity;
+import com.rodrigo.testjava.infrastructure.output.entity.ProductEntity;
+import com.rodrigo.testjava.infrastructure.output.repository.BrandRepository;
+import com.rodrigo.testjava.infrastructure.output.repository.PricesRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class PriceServiceImplTest {
 
    @Mock
-   private PricesRepository pricesRepository;
+   private PricesPersistenceAdapter pricesPersistenceAdapter;
 
    @Mock
-   private BrandRepository brandRepository;
+   private BrandPersistenceAdapter brandPersistenceAdapter;
 
    @InjectMocks
    private PriceServiceImpl priceService;
 
    private PriceRequestDto priceRequestDto;
-
-   private BrandEntity brandEntity;
-
-   private PricesEntity pricesEntity;
+   private Brand brand;
+   private Prices prices;
 
    @BeforeEach
    void setUp() {
-      brandEntity = new BrandEntity();
-      brandEntity.setBrandId(1L);
-      brandEntity.setBrandName("BrandB");
+      brand = new Brand();
+      brand.setBrandId(1L);
+      brand.setBrandName("BrandB");
 
-      pricesEntity = new PricesEntity();
-      pricesEntity.setPriceId(1L);
-      pricesEntity.setBrandId(brandEntity);
-      pricesEntity.setProductId(new ProductEntity());
-      pricesEntity.setPriority(1L);
-      pricesEntity.setStartDate(LocalDateTime.of(2020, 6, 14, 0, 0));
-      pricesEntity.setEndDate(LocalDateTime.of(2020, 12, 31, 23, 59));
-      pricesEntity.setPrice(BigDecimal.valueOf(35.50));
-      pricesEntity.setCurr(Currency.getInstance("EUR"));
+      prices = new Prices();
+      prices.setPriceId(1L);
+      prices.setBrandId(brand);
+      prices.setProductId(new Product());
+      prices.setPriority(1L);
+      prices.setStartDate(LocalDateTime.of(2020, 6, 14, 0, 0));
+      prices.setEndDate(LocalDateTime.of(2020, 12, 31, 23, 59));
+      prices.setPrice(BigDecimal.valueOf(35.50));
+      prices.setCurr(Currency.getInstance("EUR"));
 
       priceRequestDto = PriceRequestDto.builder().brandName("BrandB").productId(35455L).dateTime(LocalDateTime.of(2020, 6, 14, 10, 0)).build();
    }
 
    @Test
    void findPricesByProduct_ShouldReturnPriceDto_WhenPriceExists() {
-      Mockito.when(brandRepository.findByBrandName(priceRequestDto.getBrandName())).thenReturn(Optional.of(brandEntity));
+      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName()))
+             .thenReturn(Optional.of(brand));
 
-      Mockito
-            .when(pricesRepository.findPricesByProductByBrandAndRequestDate(priceRequestDto.getProductId(), brandEntity.getBrandId(),
-                  priceRequestDto.getDateTime()))
-            .thenReturn(Optional.of(pricesEntity));
+      Mockito.when(pricesPersistenceAdapter.findPricesByProductByBrandAndRequestDate(
+                   priceRequestDto.getProductId(), brand.getBrandId(), priceRequestDto.getDateTime()))
+             .thenReturn(Optional.of(prices));
 
       PriceDto result = priceService.findPricesByProduct(priceRequestDto);
 
       assertNotNull(result);
-      assertEquals(pricesEntity.getPrice(), result.getPrice());
-      assertEquals(pricesEntity.getCurr(), result.getCurr());
+      assertEquals(prices.getPrice(), result.getPrice());
+      assertEquals(prices.getCurr(), result.getCurr());
    }
 
    @Test
    void findPricesByProduct_ShouldThrowPriceException_WhenBrandNotFound() {
-      Mockito.when(brandRepository.findByBrandName(priceRequestDto.getBrandName())).thenReturn(Optional.empty());
+      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName()))
+             .thenReturn(Optional.empty());
 
       PriceException exception = assertThrows(PriceException.class, () -> priceService.findPricesByProduct(priceRequestDto));
 
@@ -92,12 +97,12 @@ public class PriceServiceImplTest {
 
    @Test
    void findPricesByProduct_ShouldThrowPriceException_WhenPriceNotAvailable() {
-      Mockito.when(brandRepository.findByBrandName(priceRequestDto.getBrandName())).thenReturn(Optional.of(brandEntity));
+      Mockito.when(brandPersistenceAdapter.findByBrandName(priceRequestDto.getBrandName()))
+             .thenReturn(Optional.of(brand));
 
-      Mockito
-            .when(pricesRepository.findPricesByProductByBrandAndRequestDate(priceRequestDto.getProductId(), brandEntity.getBrandId(),
-                  priceRequestDto.getDateTime()))
-            .thenReturn(Optional.empty());
+      Mockito.when(pricesPersistenceAdapter.findPricesByProductByBrandAndRequestDate(
+                   priceRequestDto.getProductId(), brand.getBrandId(), priceRequestDto.getDateTime()))
+             .thenReturn(Optional.empty());
 
       PriceException exception = assertThrows(PriceException.class, () -> priceService.findPricesByProduct(priceRequestDto));
 
