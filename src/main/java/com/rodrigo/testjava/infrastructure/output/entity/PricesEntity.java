@@ -1,4 +1,4 @@
-package com.rodrigo.testjava.domain.entity;
+package com.rodrigo.testjava.infrastructure.output.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.rodrigo.testjava.infra.controller;
+package com.rodrigo.testjava.infrastructure.input.rest;
 
 import java.time.LocalDateTime;
 
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rodrigo.testjava.application.service.PriceService;
 import com.rodrigo.testjava.domain.dto.PriceDto;
 import com.rodrigo.testjava.domain.dto.request.PriceRequestDto;
-import com.rodrigo.testjava.service.PriceService;
 
 @RestController
 @RequestMapping("/v1/price")

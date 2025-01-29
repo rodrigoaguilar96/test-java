@@ -124,7 +124,16 @@ The project includes unit tests and Integration test for the logic of the projec
 ```bash
 mvn test
 ```
-
+## Code Coverage with JaCoCo
+How to Generate Coverage Report
+1. run:
+```bash
+mvn test
+```
+2. Open the report:
+```bash
+target/site/jacoco/index.html
+```
 ## Future Improvements
 - Add Swagger for API documentation.
 - Implement more comprehensive exception handling.

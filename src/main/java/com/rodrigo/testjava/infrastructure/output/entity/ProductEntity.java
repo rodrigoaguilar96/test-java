@@ -1,4 +1,4 @@
-package com.rodrigo.testjava.domain.entity;
+package com.rodrigo.testjava.infrastructure.output.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
